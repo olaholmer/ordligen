@@ -82,9 +82,10 @@ alphabetical order; guess order does not affect either aggregate measure.
 ## Ordlig helper app
 
 The app supports five-letter weekday and six-letter weekend lists, any number
-of guess rows, green/yellow/gray per-letter feedback, and a field for letters
-known to be entirely absent. Each tile has separate green, yellow, and gray
-color dots beneath it; choosing the active color again clears that mark. It offers:
+of guess rows, and green/yellow/gray per-letter feedback. Letter tiles start
+gray and cycle through yellow, green, and gray by clicking or pressing the up
+arrow; the down arrow cycles in reverse. Left and right arrows move between
+letters. Letters and suggested words display in uppercase. It offers:
 
 - All matching candidate words, with a quick search.
 - The most common untried letter among the remaining candidates.
@@ -96,8 +97,8 @@ color dots beneath it; choosing the active color again clears that mark. It offe
   complete guesses and maximizes expected new green/yellow tiles.
 
 Feedback uses duplicate-aware Wordle rules. A guess row only applies after all
-its letters are entered; unset color marks are treated as unknown. The “entirely
-absent” field should only contain letters known to be absent in every occurrence.
-Candidate lists and filtering run locally in the browser; the app makes no
-external requests. Guess recommendations use the SALDO candidate list as the
-available guess list and treat each remaining candidate answer as equally likely.
+its letters are entered. Clicking a suggested word fills the latest incomplete
+row, or creates a new row when the latest row is already complete. Candidate
+lists and filtering run locally in the browser; the app makes no external
+requests. Guess recommendations use the SALDO candidate list as the available
+guess list and treat each remaining candidate answer as equally likely.

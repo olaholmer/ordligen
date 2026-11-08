@@ -1,7 +1,6 @@
 const alphabet = "abcdefghijklmnopqrstuvwxyzåäö";
-const colorStates = ["green", "yellow", "gray"];
+const colorCycle = ["gray", "yellow", "green"];
 const stateNames = {
-  unknown: "Omarkerad",
   green: "Grön",
   yellow: "Gul",
   gray: "Grå",
@@ -19,7 +18,6 @@ const state = {
   length: 5,
   mode: "words",
   guesses: [newGuess()],
-  excludedLetters: "",
   search: "",
   wordsByLength: new Map(),
   candidates: [],
@@ -30,17 +28,33 @@ const results = document.querySelector("#results");
 const resultCount = document.querySelector("#result-count");
 const listStatus = document.querySelector("#list-status");
 const modeSummary = document.querySelector(".mode-summary");
-const excludedInput = document.querySelector("#excluded-letters");
 
 function newGuess(length = 5) {
   return {
     letters: Array.from({ length }, () => ""),
-    marks: Array.from({ length }, () => "unknown"),
+    marks: Array.from({ length }, () => "gray"),
   };
 }
 
 function isLetter(value) {
   return value.length === 1 && alphabet.includes(value.toLocaleLowerCase("sv"));
+}
+
+function isGuessComplete(guess) {
+  return guess.letters.length === state.length && guess.letters.every(isLetter);
+}
+
+function cycleMark(guess, position, tile, direction = 1) {
+  const currentIndex = colorCycle.indexOf(guess.marks[position]);
+  const nextIndex = (currentIndex + direction + colorCycle.length) % colorCycle.length;
+  guess.marks[position] = colorCycle[nextIndex];
+  tile.dataset.state = guess.marks[position];
+  const rowIndex = Number(tile.closest(".guess-row").dataset.row);
+  tile.querySelector(".letter-input").setAttribute(
+    "aria-label",
+    `Gissning ${rowIndex + 1}, bokstav ${position + 1}, ${stateNames[guess.marks[position]].toLocaleLowerCase("sv")}`,
+  );
+  updateResults();
 }
 
 function renderGuessRows() {
@@ -59,7 +73,7 @@ function renderGuessRows() {
     const label = document.createElement("strong");
     label.textContent = `Gissning ${rowIndex + 1}`;
     const hint = document.createElement("span");
-    hint.textContent = "Välj färgprick under rutan";
+    hint.textContent = "Klicka, ↑ framåt eller ↓ bakåt för att byta färg";
     heading.append(label, hint);
 
     const tiles = document.createElement("div");
@@ -78,9 +92,12 @@ function renderGuessRows() {
       input.maxLength = 1;
       input.autocomplete = "off";
       input.spellcheck = false;
-      input.value = guess.letters[position];
+      input.value = guess.letters[position].toLocaleUpperCase("sv");
       input.placeholder = String(position + 1);
-      input.setAttribute("aria-label", `Gissning ${rowIndex + 1}, bokstav ${position + 1}`);
+      input.setAttribute(
+        "aria-label",
+        `Gissning ${rowIndex + 1}, bokstav ${position + 1}, ${stateNames[guess.marks[position]].toLocaleLowerCase("sv")}`,
+      );
       input.setAttribute("aria-describedby", "tile-feedback-help");
       input.addEventListener("input", (event) => {
         const entered = [...event.target.value]
@@ -88,7 +105,7 @@ function renderGuessRows() {
           .filter(isLetter);
         const letter = entered.at(-1) ?? "";
         guess.letters[position] = letter;
-        event.target.value = letter;
+        event.target.value = letter.toLocaleUpperCase("sv");
         if (letter && position < state.length - 1) {
           row.querySelectorAll(".letter-input")[position + 1]?.focus();
         }
@@ -99,55 +116,28 @@ function renderGuessRows() {
           row.querySelectorAll(".letter-input")[position - 1]?.focus();
         }
         if (event.key === "ArrowLeft" && position > 0) {
+          event.preventDefault();
           row.querySelectorAll(".letter-input")[position - 1]?.focus();
         }
         if (event.key === "ArrowRight" && position < state.length - 1) {
+          event.preventDefault();
           row.querySelectorAll(".letter-input")[position + 1]?.focus();
         }
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          cycleMark(guess, position, tile);
+        }
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          cycleMark(guess, position, tile, -1);
+        }
+      });
+      tile.addEventListener("click", (event) => {
+        if (event.target.closest("button")) return;
+        cycleMark(guess, position, tile);
       });
 
-      const picker = document.createElement("div");
-      picker.className = "state-picker";
-      picker.setAttribute("role", "group");
-      picker.setAttribute(
-        "aria-label",
-        `Välj feedback för gissning ${rowIndex + 1}, position ${position + 1}`,
-      );
-
-      for (const color of colorStates) {
-        const colorButton = document.createElement("button");
-        colorButton.className = `state-choice state-choice-${color}`;
-        colorButton.type = "button";
-        colorButton.setAttribute("aria-pressed", String(guess.marks[position] === color));
-        colorButton.setAttribute(
-          "aria-label",
-          `Gissning ${rowIndex + 1}, position ${position + 1}: välj ${stateNames[color].toLocaleLowerCase("sv")}`,
-        );
-        colorButton.title =
-          guess.marks[position] === color
-            ? `${stateNames[color]} vald. Klicka igen för att avmarkera.`
-            : `Välj ${stateNames[color].toLocaleLowerCase("sv")}`;
-        colorButton.addEventListener("click", () => {
-          guess.marks[position] =
-            guess.marks[position] === color ? "unknown" : color;
-          tile.dataset.state = guess.marks[position];
-          picker.querySelectorAll(".state-choice").forEach((choice) => {
-            const isSelected = choice.classList.contains(`state-choice-${guess.marks[position]}`);
-            choice.setAttribute("aria-pressed", String(isSelected));
-            const choiceColor = colorStates.find((item) =>
-              choice.classList.contains(`state-choice-${item}`),
-            );
-            choice.title =
-              choiceColor === guess.marks[position]
-                ? `${stateNames[choiceColor]} vald. Klicka igen för att avmarkera.`
-                : `Välj ${stateNames[choiceColor].toLocaleLowerCase("sv")}`;
-          });
-          updateResults();
-        });
-        picker.append(colorButton);
-      }
-
-      tile.append(input, picker);
+      tile.append(input);
       tiles.append(tile);
     }
 
@@ -184,8 +174,7 @@ function selectedGuesses() {
     }))
     .filter(
       (guess) =>
-        guess.letters.length === state.length &&
-        guess.letters.every((letter) => isLetter(letter)),
+        isGuessComplete(guess),
     );
 }
 
@@ -217,23 +206,15 @@ function matchesClues(answer, guesses) {
   return guesses.every((guess) => {
     const actual = feedbackFor(guess.letters.join(""), answer);
     return guess.marks.every(
-      (mark, position) => mark === "unknown" || mark === actual[position],
+      (mark, position) => mark === actual[position],
     );
   });
 }
 
-function getExcludedSet() {
-  return new Set(
-    [...state.excludedLetters.toLocaleLowerCase("sv")].filter(isLetter),
-  );
-}
-
 function candidateWords() {
   const guesses = selectedGuesses();
-  const excluded = getExcludedSet();
   return state.wordsByLength.get(state.length).filter((word) => {
-    if (!matchesClues(word, guesses)) return false;
-    return [...excluded].every((letter) => !word.includes(letter));
+    return matchesClues(word, guesses);
   });
 }
 
@@ -260,7 +241,7 @@ function renderWords(candidates) {
     const chip = document.createElement("button");
     chip.className = "word-chip";
     chip.type = "button";
-    chip.textContent = word;
+    chip.textContent = word.toLocaleUpperCase("sv");
     chip.title = "Använd som nästa gissning";
     chip.addEventListener("click", () => addSuggestedGuess(word));
     list.append(chip);
@@ -271,7 +252,7 @@ function renderWords(candidates) {
   footnote.textContent =
     filtered.length > shown.length
       ? `Visar ${shown.length} av ${filtered.length}. Sök för att begränsa listan. Klicka på ett ord för att lägga till en gissning.`
-      : "Klicka på ett ord för att fylla i en ny gissning.";
+      : "Klicka på ett ord för att fylla i den senaste ofullständiga gissningen eller lägga till en ny.";
 
   results.append(search);
   if (filtered.length === 0) {
@@ -337,7 +318,7 @@ function renderLetterRecommendations(candidates) {
     rank.textContent = `#${index + 1}`;
     const label = document.createElement("div");
     label.className = "recommendation-label";
-    label.textContent = letter;
+    label.textContent = letter.toLocaleUpperCase("sv");
     appendMeter(label, count / maximum);
     const detail = document.createElement("span");
     detail.className = "recommendation-detail";
@@ -397,7 +378,7 @@ function renderPositionRecommendations(candidates) {
     rank.textContent = `#${index + 1}`;
     const label = document.createElement("div");
     label.className = "recommendation-label";
-    label.textContent = item.letter;
+    label.textContent = item.letter.toLocaleUpperCase("sv");
     appendMeter(label, item.count / maximum);
     const detail = document.createElement("span");
     detail.className = "recommendation-detail";
@@ -460,7 +441,7 @@ function renderYellowRecommendations(candidates) {
     rank.textContent = "→";
     const label = document.createElement("div");
     label.className = "recommendation-label";
-    label.textContent = letter;
+    label.textContent = letter.toLocaleUpperCase("sv");
     const bars = document.createElement("div");
     bars.className = "position-bars";
     bars.setAttribute("aria-label", "Relativ sannolikhet för varje tillåten placering");
@@ -595,7 +576,7 @@ function renderGuessRecommendations(candidates, avoidPreviousLetters = false) {
     const wordButton = document.createElement("button");
     wordButton.className = "guess-recommendation-word";
     wordButton.type = "button";
-    wordButton.textContent = recommendation.word;
+    wordButton.textContent = recommendation.word.toLocaleUpperCase("sv");
     wordButton.title = "Använd som nästa gissning";
     wordButton.addEventListener("click", () => addSuggestedGuess(recommendation.word));
 
@@ -620,7 +601,7 @@ function renderResults(candidates) {
   modeSummary.textContent = modeNames[state.mode];
 
   if (!candidates.length) {
-    results.replaceChildren(emptyMessage("Inga ord matchar ledtrådarna. Kontrollera färger och grå bokstäver."));
+    results.replaceChildren(emptyMessage("Inga ord matchar ledtrådarna. Kontrollera färgerna."));
     return;
   }
 
@@ -652,12 +633,17 @@ function updateResults() {
 }
 
 function addSuggestedGuess(word) {
-  const guess = newGuess(state.length);
+  let rowIndex = state.guesses.length - 1;
+  let guess = state.guesses[rowIndex];
+  if (isGuessComplete(guess)) {
+    guess = newGuess(state.length);
+    state.guesses.push(guess);
+    rowIndex += 1;
+  }
   guess.letters = [...word];
-  state.guesses.push(guess);
   renderGuessRows();
   updateResults();
-  guessList.lastElementChild?.querySelector(".letter-input")?.focus();
+  guessList.children[rowIndex]?.querySelector(".letter-input")?.focus();
 }
 
 async function loadWords(length) {
@@ -685,9 +671,7 @@ async function loadWords(length) {
 async function setLength(length) {
   state.length = length;
   state.guesses = [newGuess(length)];
-  state.excludedLetters = "";
   state.search = "";
-  excludedInput.value = "";
   document.querySelectorAll(".length-option").forEach((button) => {
     const isActive = Number(button.dataset.length) === length;
     button.classList.toggle("is-active", isActive);
@@ -719,9 +703,7 @@ document.querySelector("#add-guess").addEventListener("click", () => {
 
 document.querySelector("#clear-clues").addEventListener("click", () => {
   state.guesses = [newGuess(state.length)];
-  state.excludedLetters = "";
   state.search = "";
-  excludedInput.value = "";
   renderGuessRows();
   updateResults();
 });
@@ -740,11 +722,6 @@ document.querySelectorAll(".mode-option").forEach((button) => {
     });
     updateResults();
   });
-});
-
-excludedInput.addEventListener("input", () => {
-  state.excludedLetters = excludedInput.value;
-  updateResults();
 });
 
 renderGuessRows();

@@ -53,24 +53,10 @@
 
         <div class="guess-list" id="guess-list" aria-live="polite"></div>
         <div class="clue-actions">
-          <p class="hint" id="tile-feedback-help">Fyll i hela gissningen. Prickarna under varje ruta är grön, gul, grå från vänster. Klicka på vald färg igen för att avmarkera.</p>
+          <p class="hint" id="tile-feedback-help">Fyll i hela gissningen. Alla rutor börjar grå. Klicka eller tryck ↑ för att växla grå → gul → grön → grå; ↓ växlar i motsatt riktning. Använd ←/→ för att flytta mellan rutorna.</p>
           <button type="button" class="secondary-button" id="add-guess">
             <span aria-hidden="true">＋</span> Lägg till gissning
           </button>
-        </div>
-
-        <div class="excluded-field">
-          <label for="excluded-letters">Grå bokstäver som inte finns i ordet</label>
-          <input
-            id="excluded-letters"
-            type="text"
-            inputmode="text"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="Skriv bokstäver, till exempel b, c, d"
-            aria-describedby="excluded-hint"
-          >
-          <p class="hint" id="excluded-hint">Ange bara bokstäver som är helt uteslutna. Grå feedback bland dubbla bokstäver hanteras från gissningsraden.</p>
         </div>
       </section>
 

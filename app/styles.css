@@ -268,6 +268,7 @@ h2 {
   border: 2px solid #dfe7e2;
   border-radius: 10px;
   background: white;
+  cursor: pointer;
   transition: background-color 120ms ease, border-color 120ms ease;
 }
 
@@ -307,7 +308,7 @@ h2 {
   font-size: clamp(21px, 5vw, 27px);
   font-weight: 800;
   text-align: center;
-  text-transform: lowercase;
+  text-transform: uppercase;
 }
 
 .letter-input::placeholder {
@@ -322,75 +323,6 @@ h2 {
 
 .letter-tile[data-state="yellow"] .letter-input::placeholder {
   color: rgb(60 48 20 / 50%);
-}
-
-.state-picker {
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  gap: 0;
-  padding: 1px;
-  border: 1px solid #e8eee9;
-  border-radius: 20px;
-  background: white;
-  transform: translateX(-50%);
-}
-
-.state-choice {
-  position: relative;
-  width: 13px;
-  height: 13px;
-  flex: 0 0 13px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.state-choice::before {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 7px;
-  height: 7px;
-  border: 1px solid rgb(0 0 0 / 10%);
-  border-radius: 50%;
-  background: var(--state-color);
-  content: "";
-  transform: translate(-50%, -50%);
-  transition: width 100ms ease, height 100ms ease, box-shadow 100ms ease;
-}
-
-.state-choice-green {
-  --state-color: #318b65;
-}
-
-.state-choice-yellow {
-  --state-color: #e3aa2d;
-}
-
-.state-choice-gray {
-  --state-color: #75827d;
-}
-
-.state-choice[aria-pressed="true"]::before {
-  width: 9px;
-  height: 9px;
-  box-shadow: 0 0 0 1px white, 0 0 0 2px #315b48;
-}
-
-.state-choice:focus-visible {
-  z-index: 1;
-  outline: 2px solid var(--green-dark);
-  outline-offset: 1px;
-}
-
-.state-choice::after {
-  position: absolute;
-  inset: -2px;
-  content: "";
 }
 
 button:focus-visible,
@@ -848,17 +780,6 @@ footer {
   .letter-tile {
     width: clamp(37px, calc((100vw - 120px) / 6), 53px);
     height: clamp(46px, 12vw, 56px);
-  }
-
-  .state-picker {
-    bottom: -7px;
-    padding: 0;
-  }
-
-  .state-choice {
-    width: 12px;
-    height: 12px;
-    flex-basis: 12px;
   }
 
   .clue-actions {
