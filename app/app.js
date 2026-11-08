@@ -1,0 +1,751 @@
+const alphabet = "abcdefghijklmnopqrstuvwxyzåäö";
+const colorStates = ["green", "yellow", "gray"];
+const stateNames = {
+  unknown: "Omarkerad",
+  green: "Grön",
+  yellow: "Gul",
+  gray: "Grå",
+};
+const modeNames = {
+  words: "Alla möjliga ord",
+  letter: "Troligaste bokstav",
+  position: "Bokstav + placering",
+  yellow: "Placering av gul bokstav",
+  guess: "Bästa nästa gissning",
+  freshGuess: "Gissning med nya bokstäver",
+};
+
+const state = {
+  length: 5,
+  mode: "words",
+  guesses: [newGuess()],
+  excludedLetters: "",
+  search: "",
+  wordsByLength: new Map(),
+  candidates: [],
+};
+
+const guessList = document.querySelector("#guess-list");
+const results = document.querySelector("#results");
+const resultCount = document.querySelector("#result-count");
+const listStatus = document.querySelector("#list-status");
+const modeSummary = document.querySelector(".mode-summary");
+const excludedInput = document.querySelector("#excluded-letters");
+
+function newGuess(length = 5) {
+  return {
+    letters: Array.from({ length }, () => ""),
+    marks: Array.from({ length }, () => "unknown"),
+  };
+}
+
+function isLetter(value) {
+  return value.length === 1 && alphabet.includes(value.toLocaleLowerCase("sv"));
+}
+
+function renderGuessRows() {
+  guessList.replaceChildren();
+
+  state.guesses.forEach((guess, rowIndex) => {
+    const row = document.createElement("div");
+    row.className = "guess-row";
+    row.dataset.row = String(rowIndex);
+
+    const main = document.createElement("div");
+    main.className = "guess-row-main";
+    const heading = document.createElement("div");
+    heading.className = "guess-row-heading";
+
+    const label = document.createElement("strong");
+    label.textContent = `Gissning ${rowIndex + 1}`;
+    const hint = document.createElement("span");
+    hint.textContent = "Välj färgprick under rutan";
+    heading.append(label, hint);
+
+    const tiles = document.createElement("div");
+    tiles.className = "tiles";
+    tiles.setAttribute("role", "group");
+    tiles.setAttribute("aria-label", `Bokstäver och feedback för gissning ${rowIndex + 1}`);
+
+    for (let position = 0; position < state.length; position += 1) {
+      const tile = document.createElement("div");
+      tile.className = "letter-tile";
+      tile.dataset.state = guess.marks[position];
+
+      const input = document.createElement("input");
+      input.className = "letter-input";
+      input.type = "text";
+      input.maxLength = 1;
+      input.autocomplete = "off";
+      input.spellcheck = false;
+      input.value = guess.letters[position];
+      input.placeholder = String(position + 1);
+      input.setAttribute("aria-label", `Gissning ${rowIndex + 1}, bokstav ${position + 1}`);
+      input.setAttribute("aria-describedby", "tile-feedback-help");
+      input.addEventListener("input", (event) => {
+        const entered = [...event.target.value]
+          .map((letter) => letter.toLocaleLowerCase("sv"))
+          .filter(isLetter);
+        const letter = entered.at(-1) ?? "";
+        guess.letters[position] = letter;
+        event.target.value = letter;
+        if (letter && position < state.length - 1) {
+          row.querySelectorAll(".letter-input")[position + 1]?.focus();
+        }
+        updateResults();
+      });
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Backspace" && !input.value && position > 0) {
+          row.querySelectorAll(".letter-input")[position - 1]?.focus();
+        }
+        if (event.key === "ArrowLeft" && position > 0) {
+          row.querySelectorAll(".letter-input")[position - 1]?.focus();
+        }
+        if (event.key === "ArrowRight" && position < state.length - 1) {
+          row.querySelectorAll(".letter-input")[position + 1]?.focus();
+        }
+      });
+
+      const picker = document.createElement("div");
+      picker.className = "state-picker";
+      picker.setAttribute("role", "group");
+      picker.setAttribute(
+        "aria-label",
+        `Välj feedback för gissning ${rowIndex + 1}, position ${position + 1}`,
+      );
+
+      for (const color of colorStates) {
+        const colorButton = document.createElement("button");
+        colorButton.className = `state-choice state-choice-${color}`;
+        colorButton.type = "button";
+        colorButton.setAttribute("aria-pressed", String(guess.marks[position] === color));
+        colorButton.setAttribute(
+          "aria-label",
+          `Gissning ${rowIndex + 1}, position ${position + 1}: välj ${stateNames[color].toLocaleLowerCase("sv")}`,
+        );
+        colorButton.title =
+          guess.marks[position] === color
+            ? `${stateNames[color]} vald. Klicka igen för att avmarkera.`
+            : `Välj ${stateNames[color].toLocaleLowerCase("sv")}`;
+        colorButton.addEventListener("click", () => {
+          guess.marks[position] =
+            guess.marks[position] === color ? "unknown" : color;
+          tile.dataset.state = guess.marks[position];
+          picker.querySelectorAll(".state-choice").forEach((choice) => {
+            const isSelected = choice.classList.contains(`state-choice-${guess.marks[position]}`);
+            choice.setAttribute("aria-pressed", String(isSelected));
+            const choiceColor = colorStates.find((item) =>
+              choice.classList.contains(`state-choice-${item}`),
+            );
+            choice.title =
+              choiceColor === guess.marks[position]
+                ? `${stateNames[choiceColor]} vald. Klicka igen för att avmarkera.`
+                : `Välj ${stateNames[choiceColor].toLocaleLowerCase("sv")}`;
+          });
+          updateResults();
+        });
+        picker.append(colorButton);
+      }
+
+      tile.append(input, picker);
+      tiles.append(tile);
+    }
+
+    main.append(heading, tiles);
+    row.append(main);
+
+    if (state.guesses.length > 1) {
+      const removeButton = document.createElement("button");
+      removeButton.className = "remove-guess";
+      removeButton.type = "button";
+      removeButton.textContent = "×";
+      removeButton.setAttribute("aria-label", `Ta bort gissning ${rowIndex + 1}`);
+      removeButton.addEventListener("click", () => {
+        state.guesses.splice(rowIndex, 1);
+        renderGuessRows();
+        updateResults();
+      });
+      row.append(removeButton);
+    } else {
+      const spacer = document.createElement("span");
+      spacer.setAttribute("aria-hidden", "true");
+      row.append(spacer);
+    }
+
+    guessList.append(row);
+  });
+}
+
+function selectedGuesses() {
+  return state.guesses
+    .map((guess) => ({
+      letters: guess.letters,
+      marks: guess.marks,
+    }))
+    .filter(
+      (guess) =>
+        guess.letters.length === state.length &&
+        guess.letters.every((letter) => isLetter(letter)),
+    );
+}
+
+function feedbackFor(guess, answer) {
+  const marks = Array.from({ length: state.length }, () => "gray");
+  const remaining = new Map();
+
+  for (let position = 0; position < state.length; position += 1) {
+    if (guess[position] === answer[position]) {
+      marks[position] = "green";
+    } else {
+      remaining.set(answer[position], (remaining.get(answer[position]) ?? 0) + 1);
+    }
+  }
+
+  for (let position = 0; position < state.length; position += 1) {
+    if (marks[position] === "green") continue;
+    const count = remaining.get(guess[position]) ?? 0;
+    if (count > 0) {
+      marks[position] = "yellow";
+      remaining.set(guess[position], count - 1);
+    }
+  }
+
+  return marks;
+}
+
+function matchesClues(answer, guesses) {
+  return guesses.every((guess) => {
+    const actual = feedbackFor(guess.letters.join(""), answer);
+    return guess.marks.every(
+      (mark, position) => mark === "unknown" || mark === actual[position],
+    );
+  });
+}
+
+function getExcludedSet() {
+  return new Set(
+    [...state.excludedLetters.toLocaleLowerCase("sv")].filter(isLetter),
+  );
+}
+
+function candidateWords() {
+  const guesses = selectedGuesses();
+  const excluded = getExcludedSet();
+  return state.wordsByLength.get(state.length).filter((word) => {
+    if (!matchesClues(word, guesses)) return false;
+    return [...excluded].every((letter) => !word.includes(letter));
+  });
+}
+
+function renderWords(candidates) {
+  results.replaceChildren();
+
+  const search = document.createElement("input");
+  search.className = "search-input search-wrap";
+  search.type = "search";
+  search.placeholder = "Sök bland möjliga ord…";
+  search.autocomplete = "off";
+  search.value = state.search;
+  search.setAttribute("aria-label", "Filtrera listan med möjliga ord");
+  search.addEventListener("input", () => {
+    state.search = search.value.toLocaleLowerCase("sv").trim();
+    renderWords(candidates);
+  });
+
+  const filtered = candidates.filter((word) => word.includes(state.search));
+  const list = document.createElement("div");
+  list.className = "word-list";
+  const shown = filtered.slice(0, 240);
+  for (const word of shown) {
+    const chip = document.createElement("button");
+    chip.className = "word-chip";
+    chip.type = "button";
+    chip.textContent = word;
+    chip.title = "Använd som nästa gissning";
+    chip.addEventListener("click", () => addSuggestedGuess(word));
+    list.append(chip);
+  }
+
+  const footnote = document.createElement("p");
+  footnote.className = "result-footnote";
+  footnote.textContent =
+    filtered.length > shown.length
+      ? `Visar ${shown.length} av ${filtered.length}. Sök för att begränsa listan. Klicka på ett ord för att lägga till en gissning.`
+      : "Klicka på ett ord för att fylla i en ny gissning.";
+
+  results.append(search);
+  if (filtered.length === 0) {
+    results.append(emptyMessage("Inga ord matchar sökningen och ledtrådarna."));
+    return;
+  }
+  results.append(list, footnote);
+}
+
+function emptyMessage(message) {
+  const empty = document.createElement("p");
+  empty.className = "empty-state";
+  empty.textContent = message;
+  return empty;
+}
+
+function rankCounts(counts) {
+  return [...counts.entries()]
+    .filter(([, count]) => count > 0)
+    .sort(
+      ([letterA, countA], [letterB, countB]) =>
+        countB - countA || alphabet.indexOf(letterA) - alphabet.indexOf(letterB),
+    );
+}
+
+function appendMeter(element, ratio) {
+  const meter = document.createElement("div");
+  meter.className = "recommendation-meter";
+  const fill = document.createElement("span");
+  fill.style.width = `${Math.max(3, ratio * 100)}%`;
+  meter.append(fill);
+  element.append(meter);
+}
+
+function renderLetterRecommendations(candidates) {
+  const counts = new Map();
+  const triedLetters = new Set(
+    selectedGuesses().flatMap((guess) => guess.letters),
+  );
+  for (const word of candidates) {
+    for (const letter of new Set(word)) {
+      if (triedLetters.has(letter)) continue;
+      counts.set(letter, (counts.get(letter) ?? 0) + 1);
+    }
+  }
+
+  const ranked = rankCounts(counts);
+  if (!ranked.length) {
+    results.replaceChildren(
+      emptyMessage("Inga nya bokstäver återstår att rekommendera bland de möjliga orden."),
+    );
+    return;
+  }
+
+  const list = document.createElement("div");
+  list.className = "recommendation-list";
+  const maximum = ranked[0][1];
+  for (const [index, [letter, count]] of ranked.slice(0, 12).entries()) {
+    const row = document.createElement("div");
+    row.className = "recommendation";
+    const rank = document.createElement("span");
+    rank.className = "recommendation-rank";
+    rank.textContent = `#${index + 1}`;
+    const label = document.createElement("div");
+    label.className = "recommendation-label";
+    label.textContent = letter;
+    appendMeter(label, count / maximum);
+    const detail = document.createElement("span");
+    detail.className = "recommendation-detail";
+    detail.textContent = `${count} av ${candidates.length} ord · ${Math.round((count / candidates.length) * 100)} %`;
+    row.append(rank, label, detail);
+    list.append(row);
+  }
+  results.replaceChildren(list);
+}
+
+function renderPositionRecommendations(candidates) {
+  const counts = Array.from({ length: state.length }, () => new Map());
+  const triedLetters = new Set(
+    selectedGuesses().flatMap((guess) => guess.letters),
+  );
+  const fixedPositions = new Set(
+    selectedGuesses().flatMap((guess) =>
+      guess.marks.flatMap((mark, position) => (mark === "green" ? [position] : [])),
+    ),
+  );
+  for (const word of candidates) {
+    for (let position = 0; position < state.length; position += 1) {
+      if (fixedPositions.has(position) || triedLetters.has(word[position])) continue;
+      const letter = word[position];
+      counts[position].set(letter, (counts[position].get(letter) ?? 0) + 1);
+    }
+  }
+
+  const ranked = [];
+  counts.forEach((positionCounts, position) => {
+    for (const [letter, count] of positionCounts) {
+      ranked.push({ letter, count, position });
+    }
+  });
+  ranked.sort(
+    (a, b) =>
+      b.count - a.count ||
+      alphabet.indexOf(a.letter) - alphabet.indexOf(b.letter) ||
+      a.position - b.position,
+  );
+
+  if (!ranked.length) {
+    results.replaceChildren(
+      emptyMessage("Inga nya bokstäver och placeringar återstår att rekommendera."),
+    );
+    return;
+  }
+
+  const maximum = ranked[0].count;
+  const list = document.createElement("div");
+  list.className = "recommendation-list";
+  for (const [index, item] of ranked.slice(0, 12).entries()) {
+    const row = document.createElement("div");
+    row.className = "recommendation";
+    const rank = document.createElement("span");
+    rank.className = "recommendation-rank";
+    rank.textContent = `#${index + 1}`;
+    const label = document.createElement("div");
+    label.className = "recommendation-label";
+    label.textContent = item.letter;
+    appendMeter(label, item.count / maximum);
+    const detail = document.createElement("span");
+    detail.className = "recommendation-detail";
+    detail.textContent = `Plats ${item.position + 1} · ${item.count} av ${candidates.length} ord`;
+    row.append(rank, label, detail);
+    list.append(row);
+  }
+  results.replaceChildren(list);
+}
+
+function yellowClues() {
+  const letters = new Map();
+  for (const guess of selectedGuesses()) {
+    guess.letters.forEach((letter, position) => {
+      if (!letter || guess.marks[position] !== "yellow") return;
+      const forbidden = letters.get(letter) ?? new Set();
+      forbidden.add(position);
+      letters.set(letter, forbidden);
+    });
+  }
+  return letters;
+}
+
+function renderYellowRecommendations(candidates) {
+  const clues = yellowClues();
+  if (!clues.size) {
+    results.replaceChildren(
+      emptyMessage("Markera minst en bokstav som gul i en gissning för att se var den kan passa."),
+    );
+    return;
+  }
+  if (!candidates.length) {
+    results.replaceChildren(emptyMessage("Det finns inga möjliga ord att analysera."));
+    return;
+  }
+
+  const list = document.createElement("div");
+  list.className = "recommendation-list";
+  for (const [letter, forbiddenPositions] of clues) {
+    const positionCounts = Array.from({ length: state.length }, () => 0);
+    for (const word of candidates) {
+      for (let position = 0; position < state.length; position += 1) {
+        if (word[position] === letter && !forbiddenPositions.has(position)) {
+          positionCounts[position] += 1;
+        }
+      }
+    }
+
+    const possiblePositions = positionCounts
+      .map((count, position) => ({ count, position }))
+      .filter(({ count, position }) => count > 0 && !forbiddenPositions.has(position))
+      .sort((a, b) => b.count - a.count || a.position - b.position);
+    if (!possiblePositions.length) continue;
+
+    const maximum = possiblePositions[0].count;
+    const row = document.createElement("div");
+    row.className = "recommendation yellow-recommendation";
+    const rank = document.createElement("span");
+    rank.className = "recommendation-rank";
+    rank.textContent = "→";
+    const label = document.createElement("div");
+    label.className = "recommendation-label";
+    label.textContent = letter;
+    const bars = document.createElement("div");
+    bars.className = "position-bars";
+    bars.setAttribute("aria-label", "Relativ sannolikhet för varje tillåten placering");
+    positionCounts.forEach((count, position) => {
+      const bar = document.createElement("div");
+      bar.className = "position-bar";
+      const fill = document.createElement("span");
+      fill.style.width = forbiddenPositions.has(position)
+        ? "0%"
+        : `${count ? Math.max(4, (count / maximum) * 100) : 0}%`;
+      bar.append(fill);
+      bar.title = `${position + 1}: ${count} möjliga ord`;
+      bars.append(bar);
+    });
+    const detail = document.createElement("span");
+    detail.className = "recommendation-detail";
+    detail.textContent = possiblePositions
+      .slice(0, 3)
+      .map(({ position, count }) => `${position + 1}: ${count}`)
+      .join(" · ");
+    row.append(rank, label, bars, detail);
+    list.append(row);
+  }
+
+  if (!list.childElementCount) {
+    results.replaceChildren(emptyMessage("Ingen möjlig placering hittades för de gula bokstäverna."));
+    return;
+  }
+  results.replaceChildren(list);
+}
+
+function rankGuessRecommendations(candidates, avoidPreviousLetters = false) {
+  const wordList = state.wordsByLength.get(state.length);
+  const previousGuesses = selectedGuesses();
+  const alreadyGuessed = new Set(previousGuesses.map((guess) => guess.letters.join("")));
+  const previousLetters = new Set(previousGuesses.flatMap((guess) => guess.letters));
+  const possibleGuesses = wordList.filter(
+    (word) =>
+      !alreadyGuessed.has(word) &&
+      (!avoidPreviousLetters || [...word].every((letter) => !previousLetters.has(letter))),
+  );
+
+  if (!possibleGuesses.length) return [];
+
+  const letterAtLeastCounts = new Map(
+    [...alphabet].map((letter) => [letter, Array(state.length + 1).fill(0)]),
+  );
+  const positionCounts = Array.from({ length: state.length }, () => new Map());
+
+  for (const answer of candidates) {
+    const counts = new Map();
+    for (let position = 0; position < state.length; position += 1) {
+      const letter = answer[position];
+      counts.set(letter, (counts.get(letter) ?? 0) + 1);
+      positionCounts[position].set(
+        letter,
+        (positionCounts[position].get(letter) ?? 0) + 1,
+      );
+    }
+
+    for (const [letter, count] of counts) {
+      const atLeast = letterAtLeastCounts.get(letter);
+      for (let occurrence = 1; occurrence <= count; occurrence += 1) {
+        atLeast[occurrence] += 1;
+      }
+    }
+  }
+
+  const ranked = possibleGuesses.map((word) => {
+    const guessCounts = new Map();
+    let greenTotal = 0;
+    for (let position = 0; position < state.length; position += 1) {
+      const letter = word[position];
+      guessCounts.set(letter, (guessCounts.get(letter) ?? 0) + 1);
+      greenTotal += positionCounts[position].get(letter) ?? 0;
+    }
+
+    let matchedTotal = 0;
+    for (const [letter, count] of guessCounts) {
+      const atLeast = letterAtLeastCounts.get(letter);
+      for (let occurrence = 1; occurrence <= count; occurrence += 1) {
+        matchedTotal += atLeast[occurrence];
+      }
+    }
+
+    return {
+      word,
+      green: greenTotal / candidates.length,
+      yellow: (matchedTotal - greenTotal) / candidates.length,
+      total: matchedTotal / candidates.length,
+    };
+  });
+
+  return ranked.sort(
+    (a, b) =>
+      b.total - a.total ||
+      b.green - a.green ||
+      a.word.localeCompare(b.word, "sv"),
+  );
+}
+
+function renderGuessRecommendations(candidates, avoidPreviousLetters = false) {
+  const ranked = rankGuessRecommendations(candidates, avoidPreviousLetters);
+  if (!ranked.length) {
+    results.replaceChildren(
+      emptyMessage(
+        avoidPreviousLetters
+          ? "Det finns inga ord kvar utan bokstäver från tidigare gissningar."
+          : "Det finns inga nya gissningar att föreslå.",
+      ),
+    );
+    return;
+  }
+
+  const intro = document.createElement("p");
+  intro.className = "result-footnote guess-recommendation-intro";
+  intro.textContent = avoidPreviousLetters
+    ? "Förslagen använder inga bokstäver från tidigare kompletta gissningar. Visar snitt per gissning om varje möjligt svar är lika troligt; fler gröna + gula prioriteras, med fler gröna först vid lika resultat. Dubbla bokstäver räknas enligt färgreglerna."
+    : "Visar snitt per gissning om varje möjligt svar är lika troligt. Rangordnat efter gröna + gula rutor; vid lika resultat prioriteras fler gröna. Dubbla bokstäver räknas enligt färgreglerna. Klicka på ett ord för att fylla nästa gissning.";
+
+  const list = document.createElement("div");
+  list.className = "recommendation-list";
+  const maximum = ranked[0].total;
+  for (const [index, recommendation] of ranked.slice(0, 20).entries()) {
+    const row = document.createElement("div");
+    row.className = "recommendation guess-recommendation";
+
+    const rank = document.createElement("span");
+    rank.className = "recommendation-rank";
+    rank.textContent = `#${index + 1}`;
+
+    const wordButton = document.createElement("button");
+    wordButton.className = "guess-recommendation-word";
+    wordButton.type = "button";
+    wordButton.textContent = recommendation.word;
+    wordButton.title = "Använd som nästa gissning";
+    wordButton.addEventListener("click", () => addSuggestedGuess(recommendation.word));
+
+    const metrics = document.createElement("div");
+    metrics.className = "guess-recommendation-metrics";
+    const score = document.createElement("strong");
+    score.textContent = `${recommendation.total.toFixed(2)} träffar`;
+    const breakdown = document.createElement("span");
+    breakdown.textContent = `${recommendation.green.toFixed(2)} gröna · ${recommendation.yellow.toFixed(2)} gula`;
+    appendMeter(metrics, recommendation.total / maximum);
+    metrics.prepend(score, breakdown);
+
+    row.append(rank, wordButton, metrics);
+    list.append(row);
+  }
+
+  results.replaceChildren(intro, list);
+}
+
+function renderResults(candidates) {
+  resultCount.textContent = `${candidates.length} möjliga`;
+  modeSummary.textContent = modeNames[state.mode];
+
+  if (!candidates.length) {
+    results.replaceChildren(emptyMessage("Inga ord matchar ledtrådarna. Kontrollera färger och grå bokstäver."));
+    return;
+  }
+
+  switch (state.mode) {
+    case "letter":
+      renderLetterRecommendations(candidates);
+      break;
+    case "position":
+      renderPositionRecommendations(candidates);
+      break;
+    case "yellow":
+      renderYellowRecommendations(candidates);
+      break;
+    case "guess":
+      renderGuessRecommendations(candidates);
+      break;
+    case "freshGuess":
+      renderGuessRecommendations(candidates, true);
+      break;
+    default:
+      renderWords(candidates);
+  }
+}
+
+function updateResults() {
+  if (!state.wordsByLength.has(state.length)) return;
+  state.candidates = candidateWords();
+  renderResults(state.candidates);
+}
+
+function addSuggestedGuess(word) {
+  const guess = newGuess(state.length);
+  guess.letters = [...word];
+  state.guesses.push(guess);
+  renderGuessRows();
+  updateResults();
+  guessList.lastElementChild?.querySelector(".letter-input")?.focus();
+}
+
+async function loadWords(length) {
+  if (state.wordsByLength.has(length)) return state.wordsByLength.get(length);
+  const response = await fetch(`./data/words-${length}.txt`);
+  if (!response.ok) {
+    throw new Error(`Kunde inte läsa ordlistan (${response.status}).`);
+  }
+  const text = await response.text();
+  const words = text
+    .split(/\r?\n/u)
+    .map((word) => word.trim().toLocaleLowerCase("sv"))
+    .filter(
+      (word) =>
+        [...word].length === length &&
+        [...word].every((letter) => alphabet.includes(letter)),
+    );
+  if (!words.length) {
+    throw new Error("Ordlistan saknar ord med rätt längd.");
+  }
+  state.wordsByLength.set(length, words);
+  return words;
+}
+
+async function setLength(length) {
+  state.length = length;
+  state.guesses = [newGuess(length)];
+  state.excludedLetters = "";
+  state.search = "";
+  excludedInput.value = "";
+  document.querySelectorAll(".length-option").forEach((button) => {
+    const isActive = Number(button.dataset.length) === length;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+  renderGuessRows();
+  listStatus.textContent = `Laddar ${length}-bokstavslistan…`;
+
+  try {
+    const words = await loadWords(length);
+    if (state.length !== length) return;
+    listStatus.textContent = `${words.length.toLocaleString("sv")} ord i listan`;
+    updateResults();
+  } catch (error) {
+    if (state.length !== length) return;
+    listStatus.textContent = error.message;
+    listStatus.classList.add("error-text");
+    results.replaceChildren(emptyMessage("Ordlistan kunde inte laddas. Starta appen via scripts/serve_app.py."));
+    resultCount.textContent = "Fel";
+  }
+}
+
+document.querySelector("#add-guess").addEventListener("click", () => {
+  state.guesses.push(newGuess(state.length));
+  renderGuessRows();
+  updateResults();
+  guessList.lastElementChild?.querySelector(".letter-input")?.focus();
+});
+
+document.querySelector("#clear-clues").addEventListener("click", () => {
+  state.guesses = [newGuess(state.length)];
+  state.excludedLetters = "";
+  state.search = "";
+  excludedInput.value = "";
+  renderGuessRows();
+  updateResults();
+});
+
+document.querySelectorAll(".length-option").forEach((button) => {
+  button.addEventListener("click", () => setLength(Number(button.dataset.length)));
+});
+
+document.querySelectorAll(".mode-option").forEach((button) => {
+  button.addEventListener("click", () => {
+    state.mode = button.dataset.mode;
+    document.querySelectorAll(".mode-option").forEach((option) => {
+      const isActive = option === button;
+      option.classList.toggle("is-active", isActive);
+      option.setAttribute("aria-pressed", String(isActive));
+    });
+    updateResults();
+  });
+});
+
+excludedInput.addEventListener("input", () => {
+  state.excludedLetters = excludedInput.value;
+  updateResults();
+});
+
+renderGuessRows();
+setLength(state.length);

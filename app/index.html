@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Filtrera möjliga Ordlig-ord och få förslag på bokstäver och placeringar."
+    >
+    <title>Ordlig-hjälpen — hitta nästa gissning</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Ordlig-hjälpen, startsida">
+        <span class="brand-mark" aria-hidden="true">ö</span>
+        <span>ordlig<span class="brand-light">hjälpen</span></span>
+      </a>
+      <span class="header-note">Din lokala gissningshjälp</span>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">Fem eller sex bokstäver</p>
+        <h1 id="page-title">Hitta nästa gissning</h1>
+        <p>Fyll i färgerna från Ordlig så visar vi möjliga ord och smarta ledtrådar.</p>
+      </section>
+
+      <section class="game-bar panel" aria-label="Spelinställningar">
+        <div>
+          <span class="field-label">Ordets längd</span>
+          <div class="segmented" role="group" aria-label="Ordets längd">
+            <button type="button" class="length-option is-active" data-length="5" aria-pressed="true">
+              5 bokstäver <span>vardag</span>
+            </button>
+            <button type="button" class="length-option" data-length="6" aria-pressed="false">
+              6 bokstäver <span>helg</span>
+            </button>
+          </div>
+        </div>
+        <div class="list-status" id="list-status" role="status">Laddar ordlista…</div>
+      </section>
+
+      <section class="panel clues-panel" aria-labelledby="clues-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Steg 1</p>
+            <h2 id="clues-title">Dina ledtrådar</h2>
+          </div>
+          <button type="button" class="text-button" id="clear-clues">Rensa allt</button>
+        </div>
+
+        <div class="guess-list" id="guess-list" aria-live="polite"></div>
+        <div class="clue-actions">
+          <p class="hint" id="tile-feedback-help">Fyll i hela gissningen. Prickarna under varje ruta är grön, gul, grå från vänster. Klicka på vald färg igen för att avmarkera.</p>
+          <button type="button" class="secondary-button" id="add-guess">
+            <span aria-hidden="true">＋</span> Lägg till gissning
+          </button>
+        </div>
+
+        <div class="excluded-field">
+          <label for="excluded-letters">Grå bokstäver som inte finns i ordet</label>
+          <input
+            id="excluded-letters"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Skriv bokstäver, till exempel b, c, d"
+            aria-describedby="excluded-hint"
+          >
+          <p class="hint" id="excluded-hint">Ange bara bokstäver som är helt uteslutna. Grå feedback bland dubbla bokstäver hanteras från gissningsraden.</p>
+        </div>
+      </section>
+
+      <section class="panel mode-panel" aria-labelledby="mode-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Steg 2</p>
+            <h2 id="mode-title">Vad vill du få hjälp med?</h2>
+          </div>
+          <span class="mode-summary">Välj ett läge</span>
+        </div>
+        <div class="mode-grid" role="group" aria-label="Ledtrådsläge">
+          <button type="button" class="mode-option is-active" data-mode="words" aria-pressed="true">
+            <span class="mode-icon" aria-hidden="true">☷</span>
+            <span><strong>Alla möjliga ord</strong><small>Filtrera med dina färger</small></span>
+          </button>
+          <button type="button" class="mode-option" data-mode="letter" aria-pressed="false">
+            <span class="mode-icon" aria-hidden="true">Aa</span>
+            <span><strong>Troligaste bokstav</strong><small>Vanligast bland lösningarna</small></span>
+          </button>
+          <button type="button" class="mode-option" data-mode="position" aria-pressed="false">
+            <span class="mode-icon" aria-hidden="true">A₂</span>
+            <span><strong>Bokstav + placering</strong><small>Vanligaste bokstavsrutan</small></span>
+          </button>
+          <button type="button" class="mode-option" data-mode="yellow" aria-pressed="false">
+            <span class="mode-icon yellow-icon" aria-hidden="true">↗</span>
+            <span><strong>Placera gul bokstav</strong><small>Var kan en gul bokstav sitta?</small></span>
+          </button>
+          <button type="button" class="mode-option" data-mode="guess" aria-pressed="false">
+            <span class="mode-icon guess-icon" aria-hidden="true">★</span>
+            <span><strong>Gissning med fler träffar</strong><small>Flest förväntade gröna och gula rutor</small></span>
+          </button>
+          <button type="button" class="mode-option" data-mode="freshGuess" aria-pressed="false">
+            <span class="mode-icon fresh-guess-icon" aria-hidden="true">＋</span>
+            <span><strong>Fler träffar med nya bokstäver</strong><small>Undvik bokstäver från tidigare gissningar</small></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel results-panel" aria-labelledby="results-title">
+        <div class="results-heading">
+          <div>
+            <p class="eyebrow">Resultat</p>
+            <h2 id="results-title">Möjliga ord</h2>
+          </div>
+          <div class="result-count" id="result-count" aria-live="polite">—</div>
+        </div>
+        <div id="results" class="results-content" aria-live="polite">
+          <p class="empty-state">Laddar ordlistan…</p>
+        </div>
+      </section>
+
+      <p class="data-note">
+        Ordlistan bygger på SALDO och är en lokal försökslista — den är inte Ordligs officiella ordlista.
+      </p>
+    </main>
+
+    <footer>
+      <span>Ordlig-hjälpen</span>
+      <span>Din inmatning stannar i webbläsaren.</span>
+    </footer>
+  </body>
+</html>

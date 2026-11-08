@@ -1,0 +1,1783 @@
+{
+  "5": {
+    "word_count": 4492,
+    "unique_word_count": 4492,
+    "total_letters": 22460,
+    "letter_frequency": [
+      {
+        "letter": "a",
+        "count": 2959
+      },
+      {
+        "letter": "s",
+        "count": 1653
+      },
+      {
+        "letter": "r",
+        "count": 1546
+      },
+      {
+        "letter": "t",
+        "count": 1506
+      },
+      {
+        "letter": "l",
+        "count": 1413
+      },
+      {
+        "letter": "n",
+        "count": 1228
+      },
+      {
+        "letter": "k",
+        "count": 1211
+      },
+      {
+        "letter": "e",
+        "count": 1208
+      },
+      {
+        "letter": "i",
+        "count": 1145
+      },
+      {
+        "letter": "o",
+        "count": 1008
+      },
+      {
+        "letter": "g",
+        "count": 870
+      },
+      {
+        "letter": "d",
+        "count": 776
+      },
+      {
+        "letter": "m",
+        "count": 709
+      },
+      {
+        "letter": "u",
+        "count": 699
+      },
+      {
+        "letter": "p",
+        "count": 694
+      },
+      {
+        "letter": "b",
+        "count": 538
+      },
+      {
+        "letter": "v",
+        "count": 526
+      },
+      {
+        "letter": "ä",
+        "count": 506
+      },
+      {
+        "letter": "f",
+        "count": 425
+      },
+      {
+        "letter": "y",
+        "count": 328
+      },
+      {
+        "letter": "ö",
+        "count": 306
+      },
+      {
+        "letter": "j",
+        "count": 303
+      },
+      {
+        "letter": "h",
+        "count": 288
+      },
+      {
+        "letter": "å",
+        "count": 271
+      },
+      {
+        "letter": "c",
+        "count": 232
+      },
+      {
+        "letter": "x",
+        "count": 65
+      },
+      {
+        "letter": "z",
+        "count": 25
+      },
+      {
+        "letter": "w",
+        "count": 16
+      },
+      {
+        "letter": "q",
+        "count": 6
+      }
+    ],
+    "word_coverage": [
+      {
+        "letter": "a",
+        "count": 2523
+      },
+      {
+        "letter": "s",
+        "count": 1487
+      },
+      {
+        "letter": "r",
+        "count": 1463
+      },
+      {
+        "letter": "t",
+        "count": 1292
+      },
+      {
+        "letter": "l",
+        "count": 1278
+      },
+      {
+        "letter": "n",
+        "count": 1133
+      },
+      {
+        "letter": "k",
+        "count": 1121
+      },
+      {
+        "letter": "e",
+        "count": 1112
+      },
+      {
+        "letter": "i",
+        "count": 1090
+      },
+      {
+        "letter": "o",
+        "count": 957
+      },
+      {
+        "letter": "g",
+        "count": 772
+      },
+      {
+        "letter": "d",
+        "count": 712
+      },
+      {
+        "letter": "u",
+        "count": 685
+      },
+      {
+        "letter": "m",
+        "count": 644
+      },
+      {
+        "letter": "p",
+        "count": 586
+      },
+      {
+        "letter": "ä",
+        "count": 506
+      },
+      {
+        "letter": "v",
+        "count": 505
+      },
+      {
+        "letter": "b",
+        "count": 470
+      },
+      {
+        "letter": "f",
+        "count": 393
+      },
+      {
+        "letter": "y",
+        "count": 327
+      },
+      {
+        "letter": "ö",
+        "count": 305
+      },
+      {
+        "letter": "j",
+        "count": 300
+      },
+      {
+        "letter": "h",
+        "count": 285
+      },
+      {
+        "letter": "å",
+        "count": 264
+      },
+      {
+        "letter": "c",
+        "count": 227
+      },
+      {
+        "letter": "x",
+        "count": 65
+      },
+      {
+        "letter": "z",
+        "count": 22
+      },
+      {
+        "letter": "w",
+        "count": 16
+      },
+      {
+        "letter": "q",
+        "count": 6
+      }
+    ],
+    "position_frequency": [
+      {
+        "position": 1,
+        "letters": [
+          {
+            "letter": "s",
+            "count": 727
+          },
+          {
+            "letter": "k",
+            "count": 394
+          },
+          {
+            "letter": "t",
+            "count": 307
+          },
+          {
+            "letter": "b",
+            "count": 295
+          },
+          {
+            "letter": "f",
+            "count": 245
+          },
+          {
+            "letter": "p",
+            "count": 237
+          },
+          {
+            "letter": "m",
+            "count": 213
+          },
+          {
+            "letter": "g",
+            "count": 210
+          },
+          {
+            "letter": "l",
+            "count": 206
+          },
+          {
+            "letter": "v",
+            "count": 190
+          },
+          {
+            "letter": "h",
+            "count": 189
+          },
+          {
+            "letter": "d",
+            "count": 187
+          },
+          {
+            "letter": "o",
+            "count": 181
+          },
+          {
+            "letter": "a",
+            "count": 169
+          },
+          {
+            "letter": "r",
+            "count": 169
+          },
+          {
+            "letter": "n",
+            "count": 128
+          },
+          {
+            "letter": "i",
+            "count": 79
+          },
+          {
+            "letter": "e",
+            "count": 71
+          },
+          {
+            "letter": "u",
+            "count": 66
+          },
+          {
+            "letter": "j",
+            "count": 61
+          },
+          {
+            "letter": "c",
+            "count": 47
+          },
+          {
+            "letter": "ä",
+            "count": 31
+          },
+          {
+            "letter": "å",
+            "count": 28
+          },
+          {
+            "letter": "ö",
+            "count": 27
+          },
+          {
+            "letter": "y",
+            "count": 20
+          },
+          {
+            "letter": "z",
+            "count": 8
+          },
+          {
+            "letter": "q",
+            "count": 3
+          },
+          {
+            "letter": "w",
+            "count": 3
+          },
+          {
+            "letter": "x",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "position": 2,
+        "letters": [
+          {
+            "letter": "a",
+            "count": 594
+          },
+          {
+            "letter": "r",
+            "count": 418
+          },
+          {
+            "letter": "o",
+            "count": 386
+          },
+          {
+            "letter": "i",
+            "count": 375
+          },
+          {
+            "letter": "e",
+            "count": 344
+          },
+          {
+            "letter": "l",
+            "count": 340
+          },
+          {
+            "letter": "u",
+            "count": 332
+          },
+          {
+            "letter": "ä",
+            "count": 250
+          },
+          {
+            "letter": "n",
+            "count": 209
+          },
+          {
+            "letter": "k",
+            "count": 163
+          },
+          {
+            "letter": "t",
+            "count": 163
+          },
+          {
+            "letter": "y",
+            "count": 139
+          },
+          {
+            "letter": "v",
+            "count": 106
+          },
+          {
+            "letter": "ö",
+            "count": 104
+          },
+          {
+            "letter": "å",
+            "count": 93
+          },
+          {
+            "letter": "p",
+            "count": 92
+          },
+          {
+            "letter": "j",
+            "count": 90
+          },
+          {
+            "letter": "m",
+            "count": 71
+          },
+          {
+            "letter": "s",
+            "count": 59
+          },
+          {
+            "letter": "h",
+            "count": 38
+          },
+          {
+            "letter": "f",
+            "count": 27
+          },
+          {
+            "letter": "d",
+            "count": 25
+          },
+          {
+            "letter": "g",
+            "count": 21
+          },
+          {
+            "letter": "c",
+            "count": 19
+          },
+          {
+            "letter": "b",
+            "count": 14
+          },
+          {
+            "letter": "x",
+            "count": 11
+          },
+          {
+            "letter": "w",
+            "count": 6
+          },
+          {
+            "letter": "z",
+            "count": 2
+          },
+          {
+            "letter": "q",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "position": 3,
+        "letters": [
+          {
+            "letter": "r",
+            "count": 419
+          },
+          {
+            "letter": "l",
+            "count": 351
+          },
+          {
+            "letter": "a",
+            "count": 333
+          },
+          {
+            "letter": "n",
+            "count": 318
+          },
+          {
+            "letter": "t",
+            "count": 278
+          },
+          {
+            "letter": "s",
+            "count": 274
+          },
+          {
+            "letter": "i",
+            "count": 247
+          },
+          {
+            "letter": "m",
+            "count": 206
+          },
+          {
+            "letter": "g",
+            "count": 182
+          },
+          {
+            "letter": "ä",
+            "count": 179
+          },
+          {
+            "letter": "o",
+            "count": 176
+          },
+          {
+            "letter": "d",
+            "count": 174
+          },
+          {
+            "letter": "u",
+            "count": 169
+          },
+          {
+            "letter": "k",
+            "count": 148
+          },
+          {
+            "letter": "e",
+            "count": 142
+          },
+          {
+            "letter": "b",
+            "count": 120
+          },
+          {
+            "letter": "p",
+            "count": 118
+          },
+          {
+            "letter": "ö",
+            "count": 114
+          },
+          {
+            "letter": "v",
+            "count": 110
+          },
+          {
+            "letter": "y",
+            "count": 99
+          },
+          {
+            "letter": "c",
+            "count": 81
+          },
+          {
+            "letter": "f",
+            "count": 74
+          },
+          {
+            "letter": "å",
+            "count": 60
+          },
+          {
+            "letter": "j",
+            "count": 55
+          },
+          {
+            "letter": "h",
+            "count": 33
+          },
+          {
+            "letter": "x",
+            "count": 22
+          },
+          {
+            "letter": "z",
+            "count": 6
+          },
+          {
+            "letter": "q",
+            "count": 2
+          },
+          {
+            "letter": "w",
+            "count": 2
+          }
+        ]
+      },
+      {
+        "position": 4,
+        "letters": [
+          {
+            "letter": "t",
+            "count": 379
+          },
+          {
+            "letter": "i",
+            "count": 374
+          },
+          {
+            "letter": "a",
+            "count": 343
+          },
+          {
+            "letter": "e",
+            "count": 335
+          },
+          {
+            "letter": "n",
+            "count": 331
+          },
+          {
+            "letter": "s",
+            "count": 328
+          },
+          {
+            "letter": "k",
+            "count": 287
+          },
+          {
+            "letter": "l",
+            "count": 277
+          },
+          {
+            "letter": "r",
+            "count": 277
+          },
+          {
+            "letter": "g",
+            "count": 211
+          },
+          {
+            "letter": "p",
+            "count": 174
+          },
+          {
+            "letter": "o",
+            "count": 167
+          },
+          {
+            "letter": "d",
+            "count": 162
+          },
+          {
+            "letter": "m",
+            "count": 136
+          },
+          {
+            "letter": "u",
+            "count": 121
+          },
+          {
+            "letter": "j",
+            "count": 85
+          },
+          {
+            "letter": "c",
+            "count": 83
+          },
+          {
+            "letter": "v",
+            "count": 80
+          },
+          {
+            "letter": "b",
+            "count": 79
+          },
+          {
+            "letter": "f",
+            "count": 56
+          },
+          {
+            "letter": "ö",
+            "count": 50
+          },
+          {
+            "letter": "å",
+            "count": 44
+          },
+          {
+            "letter": "ä",
+            "count": 42
+          },
+          {
+            "letter": "y",
+            "count": 38
+          },
+          {
+            "letter": "x",
+            "count": 15
+          },
+          {
+            "letter": "h",
+            "count": 8
+          },
+          {
+            "letter": "z",
+            "count": 6
+          },
+          {
+            "letter": "w",
+            "count": 4
+          }
+        ]
+      },
+      {
+        "position": 5,
+        "letters": [
+          {
+            "letter": "a",
+            "count": 1520
+          },
+          {
+            "letter": "t",
+            "count": 379
+          },
+          {
+            "letter": "e",
+            "count": 316
+          },
+          {
+            "letter": "s",
+            "count": 265
+          },
+          {
+            "letter": "r",
+            "count": 263
+          },
+          {
+            "letter": "g",
+            "count": 246
+          },
+          {
+            "letter": "n",
+            "count": 242
+          },
+          {
+            "letter": "l",
+            "count": 239
+          },
+          {
+            "letter": "d",
+            "count": 228
+          },
+          {
+            "letter": "k",
+            "count": 219
+          },
+          {
+            "letter": "o",
+            "count": 98
+          },
+          {
+            "letter": "m",
+            "count": 83
+          },
+          {
+            "letter": "p",
+            "count": 73
+          },
+          {
+            "letter": "i",
+            "count": 70
+          },
+          {
+            "letter": "å",
+            "count": 46
+          },
+          {
+            "letter": "v",
+            "count": 40
+          },
+          {
+            "letter": "y",
+            "count": 32
+          },
+          {
+            "letter": "b",
+            "count": 30
+          },
+          {
+            "letter": "f",
+            "count": 23
+          },
+          {
+            "letter": "h",
+            "count": 20
+          },
+          {
+            "letter": "x",
+            "count": 16
+          },
+          {
+            "letter": "j",
+            "count": 12
+          },
+          {
+            "letter": "u",
+            "count": 11
+          },
+          {
+            "letter": "ö",
+            "count": 11
+          },
+          {
+            "letter": "ä",
+            "count": 4
+          },
+          {
+            "letter": "z",
+            "count": 3
+          },
+          {
+            "letter": "c",
+            "count": 2
+          },
+          {
+            "letter": "w",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  "6": {
+    "word_count": 6770,
+    "unique_word_count": 6770,
+    "total_letters": 40620,
+    "letter_frequency": [
+      {
+        "letter": "a",
+        "count": 4417
+      },
+      {
+        "letter": "r",
+        "count": 3161
+      },
+      {
+        "letter": "s",
+        "count": 2921
+      },
+      {
+        "letter": "t",
+        "count": 2707
+      },
+      {
+        "letter": "l",
+        "count": 2659
+      },
+      {
+        "letter": "i",
+        "count": 2421
+      },
+      {
+        "letter": "e",
+        "count": 2390
+      },
+      {
+        "letter": "n",
+        "count": 2300
+      },
+      {
+        "letter": "o",
+        "count": 1914
+      },
+      {
+        "letter": "k",
+        "count": 1898
+      },
+      {
+        "letter": "g",
+        "count": 1729
+      },
+      {
+        "letter": "d",
+        "count": 1683
+      },
+      {
+        "letter": "m",
+        "count": 1340
+      },
+      {
+        "letter": "u",
+        "count": 1209
+      },
+      {
+        "letter": "p",
+        "count": 1073
+      },
+      {
+        "letter": "b",
+        "count": 1001
+      },
+      {
+        "letter": "v",
+        "count": 931
+      },
+      {
+        "letter": "f",
+        "count": 767
+      },
+      {
+        "letter": "ä",
+        "count": 755
+      },
+      {
+        "letter": "ö",
+        "count": 695
+      },
+      {
+        "letter": "å",
+        "count": 621
+      },
+      {
+        "letter": "h",
+        "count": 586
+      },
+      {
+        "letter": "y",
+        "count": 485
+      },
+      {
+        "letter": "j",
+        "count": 391
+      },
+      {
+        "letter": "c",
+        "count": 373
+      },
+      {
+        "letter": "x",
+        "count": 134
+      },
+      {
+        "letter": "z",
+        "count": 37
+      },
+      {
+        "letter": "w",
+        "count": 18
+      },
+      {
+        "letter": "q",
+        "count": 4
+      }
+    ],
+    "word_coverage": [
+      {
+        "letter": "a",
+        "count": 3641
+      },
+      {
+        "letter": "r",
+        "count": 2859
+      },
+      {
+        "letter": "s",
+        "count": 2591
+      },
+      {
+        "letter": "l",
+        "count": 2351
+      },
+      {
+        "letter": "t",
+        "count": 2284
+      },
+      {
+        "letter": "i",
+        "count": 2244
+      },
+      {
+        "letter": "e",
+        "count": 2152
+      },
+      {
+        "letter": "n",
+        "count": 2092
+      },
+      {
+        "letter": "o",
+        "count": 1763
+      },
+      {
+        "letter": "k",
+        "count": 1753
+      },
+      {
+        "letter": "g",
+        "count": 1553
+      },
+      {
+        "letter": "d",
+        "count": 1535
+      },
+      {
+        "letter": "m",
+        "count": 1213
+      },
+      {
+        "letter": "u",
+        "count": 1166
+      },
+      {
+        "letter": "b",
+        "count": 914
+      },
+      {
+        "letter": "p",
+        "count": 899
+      },
+      {
+        "letter": "v",
+        "count": 887
+      },
+      {
+        "letter": "ä",
+        "count": 749
+      },
+      {
+        "letter": "f",
+        "count": 694
+      },
+      {
+        "letter": "ö",
+        "count": 673
+      },
+      {
+        "letter": "å",
+        "count": 598
+      },
+      {
+        "letter": "h",
+        "count": 578
+      },
+      {
+        "letter": "y",
+        "count": 481
+      },
+      {
+        "letter": "j",
+        "count": 387
+      },
+      {
+        "letter": "c",
+        "count": 361
+      },
+      {
+        "letter": "x",
+        "count": 134
+      },
+      {
+        "letter": "z",
+        "count": 32
+      },
+      {
+        "letter": "w",
+        "count": 17
+      },
+      {
+        "letter": "q",
+        "count": 4
+      }
+    ],
+    "position_frequency": [
+      {
+        "position": 1,
+        "letters": [
+          {
+            "letter": "s",
+            "count": 950
+          },
+          {
+            "letter": "b",
+            "count": 523
+          },
+          {
+            "letter": "k",
+            "count": 520
+          },
+          {
+            "letter": "o",
+            "count": 412
+          },
+          {
+            "letter": "f",
+            "count": 389
+          },
+          {
+            "letter": "t",
+            "count": 382
+          },
+          {
+            "letter": "p",
+            "count": 338
+          },
+          {
+            "letter": "m",
+            "count": 326
+          },
+          {
+            "letter": "a",
+            "count": 324
+          },
+          {
+            "letter": "g",
+            "count": 307
+          },
+          {
+            "letter": "l",
+            "count": 292
+          },
+          {
+            "letter": "v",
+            "count": 290
+          },
+          {
+            "letter": "r",
+            "count": 288
+          },
+          {
+            "letter": "h",
+            "count": 261
+          },
+          {
+            "letter": "d",
+            "count": 236
+          },
+          {
+            "letter": "u",
+            "count": 162
+          },
+          {
+            "letter": "n",
+            "count": 160
+          },
+          {
+            "letter": "i",
+            "count": 153
+          },
+          {
+            "letter": "e",
+            "count": 138
+          },
+          {
+            "letter": "c",
+            "count": 79
+          },
+          {
+            "letter": "j",
+            "count": 71
+          },
+          {
+            "letter": "å",
+            "count": 56
+          },
+          {
+            "letter": "ä",
+            "count": 39
+          },
+          {
+            "letter": "ö",
+            "count": 39
+          },
+          {
+            "letter": "y",
+            "count": 18
+          },
+          {
+            "letter": "z",
+            "count": 9
+          },
+          {
+            "letter": "w",
+            "count": 5
+          },
+          {
+            "letter": "q",
+            "count": 3
+          }
+        ]
+      },
+      {
+        "position": 2,
+        "letters": [
+          {
+            "letter": "a",
+            "count": 863
+          },
+          {
+            "letter": "r",
+            "count": 627
+          },
+          {
+            "letter": "e",
+            "count": 589
+          },
+          {
+            "letter": "o",
+            "count": 553
+          },
+          {
+            "letter": "i",
+            "count": 549
+          },
+          {
+            "letter": "u",
+            "count": 455
+          },
+          {
+            "letter": "l",
+            "count": 414
+          },
+          {
+            "letter": "n",
+            "count": 339
+          },
+          {
+            "letter": "t",
+            "count": 299
+          },
+          {
+            "letter": "ä",
+            "count": 253
+          },
+          {
+            "letter": "ö",
+            "count": 245
+          },
+          {
+            "letter": "k",
+            "count": 216
+          },
+          {
+            "letter": "y",
+            "count": 213
+          },
+          {
+            "letter": "å",
+            "count": 202
+          },
+          {
+            "letter": "v",
+            "count": 172
+          },
+          {
+            "letter": "p",
+            "count": 148
+          },
+          {
+            "letter": "m",
+            "count": 142
+          },
+          {
+            "letter": "s",
+            "count": 117
+          },
+          {
+            "letter": "j",
+            "count": 101
+          },
+          {
+            "letter": "h",
+            "count": 69
+          },
+          {
+            "letter": "b",
+            "count": 44
+          },
+          {
+            "letter": "d",
+            "count": 43
+          },
+          {
+            "letter": "g",
+            "count": 32
+          },
+          {
+            "letter": "x",
+            "count": 28
+          },
+          {
+            "letter": "f",
+            "count": 27
+          },
+          {
+            "letter": "c",
+            "count": 22
+          },
+          {
+            "letter": "w",
+            "count": 4
+          },
+          {
+            "letter": "z",
+            "count": 3
+          },
+          {
+            "letter": "q",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "position": 3,
+        "letters": [
+          {
+            "letter": "r",
+            "count": 742
+          },
+          {
+            "letter": "l",
+            "count": 545
+          },
+          {
+            "letter": "n",
+            "count": 523
+          },
+          {
+            "letter": "s",
+            "count": 508
+          },
+          {
+            "letter": "a",
+            "count": 474
+          },
+          {
+            "letter": "t",
+            "count": 396
+          },
+          {
+            "letter": "d",
+            "count": 309
+          },
+          {
+            "letter": "i",
+            "count": 307
+          },
+          {
+            "letter": "k",
+            "count": 280
+          },
+          {
+            "letter": "o",
+            "count": 280
+          },
+          {
+            "letter": "m",
+            "count": 269
+          },
+          {
+            "letter": "ä",
+            "count": 253
+          },
+          {
+            "letter": "g",
+            "count": 229
+          },
+          {
+            "letter": "e",
+            "count": 223
+          },
+          {
+            "letter": "p",
+            "count": 203
+          },
+          {
+            "letter": "u",
+            "count": 193
+          },
+          {
+            "letter": "v",
+            "count": 167
+          },
+          {
+            "letter": "b",
+            "count": 141
+          },
+          {
+            "letter": "f",
+            "count": 131
+          },
+          {
+            "letter": "c",
+            "count": 113
+          },
+          {
+            "letter": "å",
+            "count": 113
+          },
+          {
+            "letter": "ö",
+            "count": 104
+          },
+          {
+            "letter": "y",
+            "count": 92
+          },
+          {
+            "letter": "j",
+            "count": 67
+          },
+          {
+            "letter": "h",
+            "count": 51
+          },
+          {
+            "letter": "x",
+            "count": 47
+          },
+          {
+            "letter": "z",
+            "count": 7
+          },
+          {
+            "letter": "w",
+            "count": 3
+          }
+        ]
+      },
+      {
+        "position": 4,
+        "letters": [
+          {
+            "letter": "t",
+            "count": 635
+          },
+          {
+            "letter": "l",
+            "count": 557
+          },
+          {
+            "letter": "s",
+            "count": 500
+          },
+          {
+            "letter": "a",
+            "count": 434
+          },
+          {
+            "letter": "r",
+            "count": 432
+          },
+          {
+            "letter": "i",
+            "count": 417
+          },
+          {
+            "letter": "n",
+            "count": 405
+          },
+          {
+            "letter": "k",
+            "count": 372
+          },
+          {
+            "letter": "e",
+            "count": 351
+          },
+          {
+            "letter": "d",
+            "count": 305
+          },
+          {
+            "letter": "m",
+            "count": 280
+          },
+          {
+            "letter": "g",
+            "count": 242
+          },
+          {
+            "letter": "b",
+            "count": 232
+          },
+          {
+            "letter": "v",
+            "count": 209
+          },
+          {
+            "letter": "o",
+            "count": 208
+          },
+          {
+            "letter": "p",
+            "count": 187
+          },
+          {
+            "letter": "f",
+            "count": 169
+          },
+          {
+            "letter": "h",
+            "count": 149
+          },
+          {
+            "letter": "u",
+            "count": 125
+          },
+          {
+            "letter": "ä",
+            "count": 125
+          },
+          {
+            "letter": "c",
+            "count": 107
+          },
+          {
+            "letter": "ö",
+            "count": 106
+          },
+          {
+            "letter": "j",
+            "count": 63
+          },
+          {
+            "letter": "y",
+            "count": 63
+          },
+          {
+            "letter": "å",
+            "count": 63
+          },
+          {
+            "letter": "x",
+            "count": 18
+          },
+          {
+            "letter": "z",
+            "count": 12
+          },
+          {
+            "letter": "w",
+            "count": 4
+          }
+        ]
+      },
+      {
+        "position": 5,
+        "letters": [
+          {
+            "letter": "a",
+            "count": 886
+          },
+          {
+            "letter": "i",
+            "count": 886
+          },
+          {
+            "letter": "e",
+            "count": 700
+          },
+          {
+            "letter": "r",
+            "count": 580
+          },
+          {
+            "letter": "l",
+            "count": 389
+          },
+          {
+            "letter": "n",
+            "count": 385
+          },
+          {
+            "letter": "o",
+            "count": 365
+          },
+          {
+            "letter": "s",
+            "count": 357
+          },
+          {
+            "letter": "t",
+            "count": 356
+          },
+          {
+            "letter": "u",
+            "count": 265
+          },
+          {
+            "letter": "k",
+            "count": 256
+          },
+          {
+            "letter": "g",
+            "count": 186
+          },
+          {
+            "letter": "ö",
+            "count": 185
+          },
+          {
+            "letter": "d",
+            "count": 176
+          },
+          {
+            "letter": "p",
+            "count": 132
+          },
+          {
+            "letter": "å",
+            "count": 127
+          },
+          {
+            "letter": "m",
+            "count": 106
+          },
+          {
+            "letter": "ä",
+            "count": 75
+          },
+          {
+            "letter": "y",
+            "count": 66
+          },
+          {
+            "letter": "j",
+            "count": 63
+          },
+          {
+            "letter": "c",
+            "count": 52
+          },
+          {
+            "letter": "b",
+            "count": 51
+          },
+          {
+            "letter": "v",
+            "count": 42
+          },
+          {
+            "letter": "f",
+            "count": 36
+          },
+          {
+            "letter": "h",
+            "count": 31
+          },
+          {
+            "letter": "x",
+            "count": 13
+          },
+          {
+            "letter": "z",
+            "count": 4
+          }
+        ]
+      },
+      {
+        "position": 6,
+        "letters": [
+          {
+            "letter": "a",
+            "count": 1436
+          },
+          {
+            "letter": "g",
+            "count": 733
+          },
+          {
+            "letter": "t",
+            "count": 639
+          },
+          {
+            "letter": "d",
+            "count": 614
+          },
+          {
+            "letter": "r",
+            "count": 492
+          },
+          {
+            "letter": "s",
+            "count": 489
+          },
+          {
+            "letter": "n",
+            "count": 488
+          },
+          {
+            "letter": "l",
+            "count": 462
+          },
+          {
+            "letter": "e",
+            "count": 389
+          },
+          {
+            "letter": "k",
+            "count": 254
+          },
+          {
+            "letter": "m",
+            "count": 217
+          },
+          {
+            "letter": "i",
+            "count": 109
+          },
+          {
+            "letter": "o",
+            "count": 96
+          },
+          {
+            "letter": "p",
+            "count": 65
+          },
+          {
+            "letter": "å",
+            "count": 60
+          },
+          {
+            "letter": "v",
+            "count": 51
+          },
+          {
+            "letter": "y",
+            "count": 33
+          },
+          {
+            "letter": "x",
+            "count": 28
+          },
+          {
+            "letter": "j",
+            "count": 26
+          },
+          {
+            "letter": "h",
+            "count": 25
+          },
+          {
+            "letter": "ö",
+            "count": 16
+          },
+          {
+            "letter": "f",
+            "count": 15
+          },
+          {
+            "letter": "b",
+            "count": 10
+          },
+          {
+            "letter": "ä",
+            "count": 10
+          },
+          {
+            "letter": "u",
+            "count": 9
+          },
+          {
+            "letter": "w",
+            "count": 2
+          },
+          {
+            "letter": "z",
+            "count": 2
+          }
+        ]
+      }
+    ]
+  }
+}
