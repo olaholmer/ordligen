@@ -1,5 +1,6 @@
 const alphabet = "abcdefghijklmnopqrstuvwxyzåäö";
 const colorCycle = ["gray", "yellow", "green"];
+const storageKey = "ordligen.appState.v1";
 const stateNames = {
   green: "Grön",
   yellow: "Gul",
@@ -28,6 +29,72 @@ const results = document.querySelector("#results");
 const resultCount = document.querySelector("#result-count");
 const listStatus = document.querySelector("#list-status");
 const modeSummary = document.querySelector(".mode-summary");
+const storageStatus = document.querySelector("#storage-status");
+
+function showStorageWarning(message) {
+  storageStatus.textContent = message;
+  storageStatus.hidden = false;
+}
+
+function restoreSavedState() {
+  let saved;
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) return;
+    saved = JSON.parse(raw);
+  } catch {
+    showStorageWarning("Det gick inte att läsa ditt sparade tillstånd från webbläsaren.");
+    return;
+  }
+
+  const validLength = saved?.length === 5 || saved?.length === 6;
+  const validMode = Object.hasOwn(modeNames, saved?.mode);
+  const validGuesses =
+    Array.isArray(saved?.guesses) &&
+    saved.guesses.length > 0 &&
+    saved.guesses.every(
+      (guess) =>
+        Array.isArray(guess.letters) &&
+        Array.isArray(guess.marks) &&
+        guess.letters.length === saved.length &&
+        guess.marks.length === saved.length &&
+        guess.letters.every(
+          (letter) =>
+            typeof letter === "string" && (letter === "" || isLetter(letter)),
+        ) &&
+        guess.marks.every((mark) => colorCycle.includes(mark)),
+    );
+  if (!validLength || !validMode || !validGuesses || typeof saved.search !== "string") {
+    showStorageWarning("Det sparade tillståndet kunde inte läsas. Börjar med en ny omgång.");
+    return;
+  }
+
+  state.length = saved.length;
+  state.mode = saved.mode;
+  state.guesses = saved.guesses.map((guess) => ({
+    letters: guess.letters.map((letter) => letter.toLocaleLowerCase("sv")),
+    marks: guess.marks.map((mark, position) =>
+      guess.letters[position] ? mark : "gray",
+    ),
+  }));
+  state.search = saved.search;
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        length: state.length,
+        mode: state.mode,
+        guesses: state.guesses,
+        search: state.search,
+      }),
+    );
+  } catch {
+    showStorageWarning("Det gick inte att spara tillståndet i webbläsaren.");
+  }
+}
 
 function newGuess(length = 5) {
   return {
@@ -45,6 +112,16 @@ function isGuessComplete(guess) {
 }
 
 function cycleMark(guess, position, tile, direction = 1) {
+  if (!isLetter(guess.letters[position])) {
+    guess.marks[position] = "gray";
+    tile.dataset.state = "gray";
+    const rowIndex = Number(tile.closest(".guess-row").dataset.row);
+    tile.querySelector(".letter-input").setAttribute(
+      "aria-label",
+      `Gissning ${rowIndex + 1}, bokstav ${position + 1}, grå`,
+    );
+    return;
+  }
   const currentIndex = colorCycle.indexOf(guess.marks[position]);
   const nextIndex = (currentIndex + direction + colorCycle.length) % colorCycle.length;
   guess.marks[position] = colorCycle[nextIndex];
@@ -134,6 +211,7 @@ function renderGuessRows() {
       });
       tile.addEventListener("click", (event) => {
         if (event.target.closest("button")) return;
+        input.focus();
         cycleMark(guess, position, tile);
       });
 
@@ -230,6 +308,7 @@ function renderWords(candidates) {
   search.setAttribute("aria-label", "Filtrera listan med möjliga ord");
   search.addEventListener("input", () => {
     state.search = search.value.toLocaleLowerCase("sv").trim();
+    saveState();
     renderWords(candidates);
   });
 
@@ -627,6 +706,7 @@ function renderResults(candidates) {
 }
 
 function updateResults() {
+  saveState();
   if (!state.wordsByLength.has(state.length)) return;
   state.candidates = candidateWords();
   renderResults(state.candidates);
@@ -669,15 +749,24 @@ async function loadWords(length) {
 }
 
 async function setLength(length) {
+  const lengthChanged = state.length !== length;
   state.length = length;
-  state.guesses = [newGuess(length)];
-  state.search = "";
+  if (lengthChanged) {
+    state.guesses = [newGuess(length)];
+    state.search = "";
+  }
   document.querySelectorAll(".length-option").forEach((button) => {
     const isActive = Number(button.dataset.length) === length;
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
+  document.querySelectorAll(".mode-option").forEach((button) => {
+    const isActive = button.dataset.mode === state.mode;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
   renderGuessRows();
+  focusFirstEmptyLetter();
   listStatus.textContent = `Laddar ${length}-bokstavslistan…`;
 
   try {
@@ -692,6 +781,12 @@ async function setLength(length) {
     results.replaceChildren(emptyMessage("Ordlistan kunde inte laddas. Starta appen via scripts/serve_app.py."));
     resultCount.textContent = "Fel";
   }
+}
+
+function focusFirstEmptyLetter() {
+  const inputs = [...guessList.querySelectorAll(".letter-input")];
+  const firstEmpty = inputs.find((input) => !input.value) ?? inputs[0];
+  firstEmpty?.focus();
 }
 
 document.querySelector("#add-guess").addEventListener("click", () => {
@@ -724,5 +819,6 @@ document.querySelectorAll(".mode-option").forEach((button) => {
   });
 });
 
+restoreSavedState();
 renderGuessRows();
 setLength(state.length);

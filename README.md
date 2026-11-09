@@ -102,3 +102,8 @@ row, or creates a new row when the latest row is already complete. Candidate
 lists and filtering run locally in the browser; the app makes no external
 requests. Guess recommendations use the SALDO candidate list as the available
 guess list and treat each remaining candidate answer as equally likely.
+
+The app is named “Ordligen - din ordlig hjälp”. The current word length, clue
+mode, guesses, colors, and search text are saved in browser storage and restored
+when the app is reopened. Nothing is sent to a server. On page load, focus moves
+to the first empty letter tile.
