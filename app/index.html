@@ -5,25 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="Filtrera möjliga Ordlig-ord och få förslag på bokstäver och placeringar."
+      content="Ordligen - din ordlig hjälp. Filtrera möjliga ord och hitta nästa gissning."
     >
-    <title>Ordlig-hjälpen — hitta nästa gissning</title>
+    <title>Ordligen - din ordlig hjälp</title>
     <link rel="stylesheet" href="./styles.css">
     <script src="./app.js" defer></script>
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="./" aria-label="Ordlig-hjälpen, startsida">
-        <span class="brand-mark" aria-hidden="true">ö</span>
-        <span>ordlig<span class="brand-light">hjälpen</span></span>
+      <a class="brand" href="./" aria-label="Ordligen, startsida">
+        <span class="brand-mark" aria-hidden="true">O</span>
+        <span>Ordligen</span>
       </a>
-      <span class="header-note">Din lokala gissningshjälp</span>
+      <span class="header-note">Din Ordlig-hjälp</span>
     </header>
 
     <main>
       <section class="intro" aria-labelledby="page-title">
         <p class="eyebrow">Fem eller sex bokstäver</p>
-        <h1 id="page-title">Hitta nästa gissning</h1>
+        <h1 id="page-title">Ordligen</h1>
         <p>Fyll i färgerna från Ordlig så visar vi möjliga ord och smarta ledtrådar.</p>
       </section>
 
@@ -52,6 +52,7 @@
         </div>
 
         <div class="guess-list" id="guess-list" aria-live="polite"></div>
+        <p class="hint storage-status" id="storage-status" role="status" hidden></p>
         <div class="clue-actions">
           <p class="hint" id="tile-feedback-help">Fyll i hela gissningen. Alla rutor börjar grå. Klicka eller tryck ↑ för att växla grå → gul → grön → grå; ↓ växlar i motsatt riktning. Använd ←/→ för att flytta mellan rutorna.</p>
           <button type="button" class="secondary-button" id="add-guess">
